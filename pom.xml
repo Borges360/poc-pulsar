@@ -20,7 +20,7 @@
     <name>pulsar</name>
     <description>pulsar</description>
     <properties>
-        <java.version>1.17</java.version>
+        <java.version>1.11</java.version>
     </properties>
     <dependencies>
         <dependency>

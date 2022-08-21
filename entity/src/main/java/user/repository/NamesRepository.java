@@ -1,4 +1,4 @@
-package br.com.pocpulsarproducer.producer.repository;
+package user.repository;
 
 import org.springframework.stereotype.Component;
 

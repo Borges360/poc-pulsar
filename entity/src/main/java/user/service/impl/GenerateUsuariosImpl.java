@@ -1,19 +1,18 @@
-package br.com.pocpulsarproducer.producer.service;
+package user.service.impl;
 
-import br.com.pocpulsarproducer.producer.repository.NamesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import user.Usuario;
+import user.repository.NamesRepository;
+import user.service.GenerateUsuarios;
 
 import java.util.*;
 
-@Service
-public class GeneratePayload {
+public class GenerateUsuariosImpl implements GenerateUsuarios {
 
     private final NamesRepository namesRepository;
 
-    @Autowired
-    public GeneratePayload(NamesRepository namesRepository) {
+    public GenerateUsuariosImpl(NamesRepository namesRepository) {
         this.namesRepository = namesRepository;
     }
 
@@ -30,9 +29,9 @@ public class GeneratePayload {
     private Usuario generateUsuario(String name){
         Usuario user = new Usuario();
         Random random = new Random();
-        user.setCpf(String.valueOf(random.nextLong(99999999999L - 10000000000L)));
+        user.setCpf(String.valueOf(random.nextLong()));
         user.setNome(name);
-        user.setTelefone(String.valueOf(random.nextLong(99999999999L - 10000000000L)));
+        user.setTelefone(String.valueOf(random.nextLong()));
         int dia = random.nextInt(31);
         int mes = random.nextInt(12);
         int ano = random.nextInt(2022-1940);
