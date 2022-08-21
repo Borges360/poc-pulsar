@@ -1,5 +1,6 @@
 package br.com.pocpulsarproducer.producer.service.impl;
 
+import br.com.pocpulsarproducer.producer.config.PulsarClientProducer;
 import org.springframework.beans.factory.annotation.Autowired;
 import user.repository.NamesRepository;
 import user.service.GenerateUsuarios;
@@ -17,22 +18,18 @@ public class UsuariosProducerImpl implements UsuariosProducer {
     private final GenerateUsuarios generateUsuarios;
 
     @Autowired
+    private PulsarClientProducer pulsarClientProducer;
+
+    @Autowired
     public UsuariosProducerImpl() {
         this.generateUsuarios = new GenerateUsuariosImpl(new NamesRepository());
     }
 
-    public void start(int quantidade) throws PulsarClientException {
-        PulsarClient client = PulsarClient.builder()
-                .serviceUrl("pulsar://localhost:6650")
-                .build();
-
-        Producer<String> stringProducer = client.newProducer(Schema.STRING)
-                .topic("usuario")
-                .create();
+    public void start(int quantidade) {
 
         generateUsuarios.generateBatchUser(quantidade).forEach(usuario -> {
             try {
-                stringProducer.send(usuario.toString());
+                pulsarClientProducer.client().send(usuario.toString());
             } catch (PulsarClientException e) {
                 e.printStackTrace();
             }

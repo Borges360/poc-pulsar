@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+
 @Controller
 public class UsuarioConsumer {
 
@@ -17,28 +20,28 @@ public class UsuarioConsumer {
     private PulsarClientConsumer pulsarClientConsumer;
 
     @Bean
-    public void consumer() throws PulsarClientException {
+    public void consumer() {
         Thread thread = new Thread(() -> {
             while (true) {
                 // Wait for a message
-                Message msg = null;
+                CompletableFuture<Message> msg = null;
                 try {
-                    msg = pulsarClientConsumer.client().receive();
+                    msg = pulsarClientConsumer.client().receiveAsync();
                 } catch (PulsarClientException e) {
                     e.printStackTrace();
                 }
 
                 try {
                     // Do something with the message
-                    System.out.println("Message received: " + new String(msg.getData()));
+                    System.out.println("Message received: " + new String(msg.get().getData()));
 
                     // Acknowledge the message so that it can be deleted by the message broker
-                    pulsarClientConsumer.client().acknowledge(msg);
+                    pulsarClientConsumer.client().acknowledge(msg.get());
                 } catch (Exception e) {
                     // Message failed to process, redeliver later
                     try {
-                        pulsarClientConsumer.client().negativeAcknowledge(msg);
-                    } catch (PulsarClientException ex) {
+                        pulsarClientConsumer.client().negativeAcknowledge(msg.get());
+                    }  catch (ExecutionException | InterruptedException | PulsarClientException ex) {
                         ex.printStackTrace();
                     }
                 }
