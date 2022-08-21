@@ -1,16 +1,13 @@
 package br.com.pocpulsarproducer.producer.service.impl;
 
 import br.com.pocpulsarproducer.producer.config.PulsarClientProducer;
+import br.com.pocpulsarproducer.producer.service.UsuariosProducer;
 import lombok.extern.log4j.Log4j2;
+import org.apache.pulsar.client.api.PulsarClientException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import user.repository.NamesRepository;
 import user.service.GenerateUsuarios;
-import org.apache.pulsar.client.api.Producer;
-import org.apache.pulsar.client.api.PulsarClient;
-import org.apache.pulsar.client.api.PulsarClientException;
-import org.apache.pulsar.client.api.Schema;
-import org.springframework.stereotype.Service;
-import br.com.pocpulsarproducer.producer.service.UsuariosProducer;
 import user.service.impl.GenerateUsuariosImpl;
 
 @Service

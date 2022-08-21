@@ -4,6 +4,8 @@ import org.apache.pulsar.client.api.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.concurrent.TimeUnit;
+
 @Configuration
 public class PulsarClientProducer {
 
@@ -15,6 +17,11 @@ public class PulsarClientProducer {
 
         return client.newProducer(Schema.STRING)
                 .topic("usuario")
+                .enableChunking(true)
+                .enableBatching(true)
+                .batchingMaxPublishDelay(10, TimeUnit.MILLISECONDS)
+                .sendTimeout(10, TimeUnit.SECONDS)
+                .batcherBuilder(BatcherBuilder.KEY_BASED)
                 .create();
     }
 
