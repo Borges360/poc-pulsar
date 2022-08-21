@@ -17,7 +17,7 @@ public class PulsarClientProducer {
 
         return client.newProducer(Schema.STRING)
                 .topic("usuario")
-                .enableChunking(true)
+                .enableChunking(false)
                 .enableBatching(true)
                 .batchingMaxPublishDelay(10, TimeUnit.MILLISECONDS)
                 .sendTimeout(10, TimeUnit.SECONDS)

@@ -3,6 +3,7 @@ package br.com.pocpulsarconsumer.consumer.controller;
 
 import br.com.pocpulsarconsumer.consumer.config.PulsarClientConsumer;
 import lombok.extern.log4j.Log4j2;
+import org.apache.pulsar.client.api.Message;
 import org.apache.pulsar.client.api.Messages;
 import org.apache.pulsar.client.api.PulsarClientException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +22,11 @@ public class UsuarioConsumer {
         Thread thread = new Thread(() -> {
             while (true) {
                 // Wait for a message
-                Messages msgs = null;
+                Messages<Message> msgs = null;
                 try {
                     msgs = pulsarClientConsumer.client().batchReceive();
-                    for(Object message : msgs){
-                        log.info("Message received: " + message);
+                    for(Message message : msgs){
+                        log.info("Message received: " + new String(message.getData()));
                     }
                 } catch (PulsarClientException e) {
                     e.printStackTrace();
