@@ -2,6 +2,7 @@ package br.com.pocpulsarconsumer.consumer.controller;
 
 
 import br.com.pocpulsarconsumer.consumer.config.PulsarClientConsumer;
+import lombok.extern.log4j.Log4j2;
 import org.apache.pulsar.client.api.Consumer;
 import org.apache.pulsar.client.api.Message;
 import org.apache.pulsar.client.api.PulsarClient;
@@ -14,6 +15,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 @Controller
+@Log4j2
 public class UsuarioConsumer {
 
     @Autowired
@@ -24,24 +26,24 @@ public class UsuarioConsumer {
         Thread thread = new Thread(() -> {
             while (true) {
                 // Wait for a message
-                CompletableFuture<Message> msg = null;
+                Message msg = null;
                 try {
-                    msg = pulsarClientConsumer.client().receiveAsync();
+                    msg = pulsarClientConsumer.client().receive();
                 } catch (PulsarClientException e) {
                     e.printStackTrace();
                 }
 
                 try {
                     // Do something with the message
-                    System.out.println("Message received: " + new String(msg.get().getData()));
+                    log.info("Message received: " + new String(msg.getData()));
 
                     // Acknowledge the message so that it can be deleted by the message broker
-                    pulsarClientConsumer.client().acknowledge(msg.get());
+                    pulsarClientConsumer.client().acknowledge(msg);
                 } catch (Exception e) {
                     // Message failed to process, redeliver later
                     try {
-                        pulsarClientConsumer.client().negativeAcknowledge(msg.get());
-                    }  catch (ExecutionException | InterruptedException | PulsarClientException ex) {
+                        pulsarClientConsumer.client().negativeAcknowledge(msg);
+                    }  catch (PulsarClientException ex) {
                         ex.printStackTrace();
                     }
                 }
