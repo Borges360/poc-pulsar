@@ -1,6 +1,7 @@
 package br.com.pocpulsarproducer.producer.service.impl;
 
 import br.com.pocpulsarproducer.producer.config.PulsarClientProducer;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import user.repository.NamesRepository;
 import user.service.GenerateUsuarios;
@@ -13,6 +14,7 @@ import br.com.pocpulsarproducer.producer.service.UsuariosProducer;
 import user.service.impl.GenerateUsuariosImpl;
 
 @Service
+@Log4j2
 public class UsuariosProducerImpl implements UsuariosProducer {
 
     private final GenerateUsuarios generateUsuarios;
@@ -29,7 +31,9 @@ public class UsuariosProducerImpl implements UsuariosProducer {
 
         generateUsuarios.generateBatchUser(quantidade).forEach(usuario -> {
             try {
-                pulsarClientProducer.client().send(usuario.toString());
+                pulsarClientProducer.client().sendAsync(usuario.toString()).thenAccept(msgId -> {
+                   log.info("Message with ID " + msgId + " successfully sent");
+                });
             } catch (PulsarClientException e) {
                 e.printStackTrace();
             }
