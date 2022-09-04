@@ -386,7 +386,7 @@ services:
     depends_on:
       - broker1
     volumes:
-      - "./data/:/data"
+      - "./data/v4:/data"
     environment:
       REDIRECT_HOST: "http://127.0.0.1"
       REDIRECT_PORT: "9527"
