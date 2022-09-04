@@ -11,7 +11,7 @@ services:
       - "6650:6650"
     restart: always
     volumes:
-      - "./data:/pulsar/data"
+      - "./data/v1:/pulsar/data"
   dashboard:
     image: apachepulsar/pulsar-manager:latest
     ports:
@@ -24,3 +24,6 @@ services:
       - pulsar
     environment:
       SPRING_CONFIGURATION_FILE: /pulsar-manager/pulsar-manager/application.properties
+      USERNAME: "pulsar"
+      PASSWORD: "pulsar"
+      LOG_LEVEL: "DEBUG"
